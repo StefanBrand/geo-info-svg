@@ -1,0 +1,22 @@
+<html>
+
+<head>
+    <title>Country Details</title>
+</head>
+
+<body>
+    <table>
+        <tr>
+            <th>Country Name</th>
+            <th>Population</th>
+        </tr>
+        {% for country in countries %}
+        <tr>
+            <td>{{ country.name }}</td>
+            <td>{{ country.population }}</td>
+        </tr>
+        {%endfor%}
+    </table>
+</body>
+
+</html>

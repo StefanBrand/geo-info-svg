@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  app:
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/srv/service
+    depends_on: [ "db" ]
+    command:
+      - "bash"
+      - "-c"
+      - >-
+        while !</dev/tcp/db/5432; do echo 'waiting for db'; sleep 1; done; uvicorn geo_info_svg.api:app --host 0.0.0.0 --port 8000 --reload
+
+  db:
+    image: postgis/postgis:14-3.2
+    environment:
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "supersecret"
+      POSTGRES_DB: "db"
