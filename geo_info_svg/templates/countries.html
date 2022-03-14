@@ -9,11 +9,13 @@
         <tr>
             <th>Country Name</th>
             <th>Population</th>
+            <th>SVG</th>
         </tr>
         {% for country in countries %}
         <tr>
             <td>{{ country.name }}</td>
             <td>{{ country.population }}</td>
+            <td>{{ country.ST_AsSVG }}</td>
         </tr>
         {%endfor%}
     </table>

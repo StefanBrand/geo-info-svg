@@ -13,7 +13,14 @@ templates = Jinja2Templates(directory="geo_info_svg/templates")
 @app.get("/", response_class=HTMLResponse)
 async def test(request: Request):
     with Session(engine) as session:
-        countries = session.exec(select(Country)).all()
-        return templates.TemplateResponse(
-            "countries.html", {"request": request, "countries": countries}
-        )
+        countries = session.exec(
+            select(
+                Country.name,
+                Country.population,
+                Country.geometry.ST_AsSVG(),
+            )
+        ).all()
+
+    return templates.TemplateResponse(
+        "countries.html", {"request": request, "countries": countries}
+    )
