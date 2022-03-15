@@ -5,20 +5,46 @@
 </head>
 
 <body>
-    <table>
-        <tr>
-            <th>Country Name</th>
-            <th>Population</th>
-            <th>SVG</th>
-        </tr>
+    {% set scale_rect %}
+    <rect width="500000" height="10000" style="fill: black" />
+    {% endset %}
+    {% macro render_svg(geometry, xmin, ymin, xmax, ymax, scaling_factor=1/5000) -%}
+    <svg width="{{ (xmax-xmin) * scaling_factor }}"
+        height="{{ (ymax-ymin) * scaling_factor }}"
+        viewBox="{{ xmin }} {{ ymax*-1 }} {{ xmax-xmin }} {{ ymax-ymin }}">
+        {{ geometry | safe }}
+    </svg>
+    {%- endmacro %}
+
+    <div style="display: flex; flex-flow: row wrap; justify-content: center;">
         {% for country in countries %}
-        <tr>
-            <td>{{ country.name }}</td>
-            <td>{{ country.population }}</td>
-            <td>{{ country.ST_AsSVG }}</td>
-        </tr>
-        {%endfor%}
-    </table>
+
+        {% set country_path %}
+        <path d="{{ country.ST_AsSVG }}" style="fill: red" />
+        {% endset %}
+
+        <div style="text-align: center">
+            <b>{{ country.name }}</b>
+            <br />
+            {{ "{:,.0f}".format(country.population) }}
+            <br />
+            {{ render_svg(
+            country_path,
+            country.ST_XMin,
+            country.ST_YMin,
+            country.ST_XMax,
+            country.ST_YMax)
+            }}
+        </div>
+
+        {% endfor %}
+    </div>
+    <div style="text-align: center;">
+        500<br />
+        {{ render_svg(scale_rect, xmin=0, ymin=-10000, xmax=500000, ymax=0) }}
+        <br />
+        km
+    </div>
 </body>
 
 </html>
