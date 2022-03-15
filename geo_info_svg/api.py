@@ -15,7 +15,7 @@ templates = Jinja2Templates(directory="geo_info_svg/templates")
 async def test(request: Request):
     with Session(engine) as session:
         countries = session.exec(
-            select(
+            select(  # type: ignore
                 Country.name,
                 Country.population,
                 cast(Country.geometry, Geometry).ST_XMin(),
